@@ -33,7 +33,7 @@ function friendlyError(err: unknown): string {
   return 'An unexpected error occurred. Please try again.';
 }
 
-export function useDashboardData(): UseDashboardDataReturn {
+export function useDashboardData(enabled = true): UseDashboardDataReturn {
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -75,8 +75,12 @@ export function useDashboardData(): UseDashboardDataReturn {
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (enabled) {
+      fetchData();
+    } else {
+      setLoading(false);
+    }
+  }, [fetchData, enabled]);
 
   const refresh = useCallback(() => {
     retryCount.current = 0;

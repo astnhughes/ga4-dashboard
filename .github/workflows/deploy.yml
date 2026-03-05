@@ -74,7 +74,8 @@ jobs:
             --max-instances 3 \
             --timeout 60s \
             --concurrency 80 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars "GOOGLE_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }},SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
 
       - name: Smoke test
         run: |

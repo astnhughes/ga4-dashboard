@@ -12,6 +12,8 @@ interface LayoutProps {
   cached?: boolean;
   refreshing?: boolean;
   onRefresh: () => void;
+  user?: { name: string; picture: string; email: string };
+  onLogout?: () => void;
 }
 
 const TABS: { id: string; label: string; disabled?: boolean }[] = [
@@ -53,6 +55,8 @@ export function Layout({
   cached,
   refreshing,
   onRefresh,
+  user,
+  onLogout,
 }: LayoutProps) {
   const store = STORES[selectedStore];
   const accentColor = store.accentColor;
@@ -116,6 +120,25 @@ export function Layout({
               )}
               {refreshing ? 'Refreshing...' : 'Refresh'}
             </button>
+
+            {/* User Menu */}
+            {user && (
+              <div className="flex items-center gap-2">
+                {user.picture ? (
+                  <img src={user.picture} alt="" className="w-7 h-7 rounded-full" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-dashboard-border flex items-center justify-center text-xs text-dashboard-text-muted">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <button
+                  onClick={onLogout}
+                  className="text-xs text-dashboard-text-muted hover:text-dashboard-text-primary transition-colors"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

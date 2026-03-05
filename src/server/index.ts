@@ -1,10 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import authRoutes from './routes/auth';
 import dashboardRoutes from './routes/dashboard';
+import { requireAuth } from './middleware/auth';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Trust Cloud Run's proxy for correct req.protocol (https)
+app.set('trust proxy', true);
 
 app.use(cors());
 app.use(express.json());
@@ -24,13 +29,16 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../client')));
 }
 
-// Health check
+// Health check (no auth required)
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Dashboard API routes
-app.use('/api', dashboardRoutes);
+// Auth routes (no auth required — handles login/callback/logout)
+app.use('/api', authRoutes);
+
+// Dashboard API routes (protected by auth)
+app.use('/api', requireAuth, dashboardRoutes);
 
 // Serve React app for all other routes in production
 if (process.env.NODE_ENV === 'production') {

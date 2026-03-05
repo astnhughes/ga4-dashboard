@@ -1,6 +1,8 @@
 import { useState, lazy, Suspense } from 'react';
 import { Layout } from './components/Layout';
 import { SkeletonPage } from './components/Skeleton';
+import { Login } from './pages/Login';
+import { useAuth } from './hooks/useAuth';
 import { useDashboardData } from './hooks/useDashboardData';
 
 const Overview = lazy(() => import('./pages/Overview').then((m) => ({ default: m.Overview })));
@@ -12,8 +14,19 @@ const Technical = lazy(() => import('./pages/Technical').then((m) => ({ default:
 const Guide = lazy(() => import('./pages/Guide').then((m) => ({ default: m.Guide })));
 
 function App() {
-  const { data, loading, refreshing, error, refresh, selectedStore, setSelectedStore } = useDashboardData();
+  const { user, loading: authLoading, logout } = useAuth();
+  const { data, loading, refreshing, error, refresh, selectedStore, setSelectedStore } = useDashboardData(!!user);
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Show blank screen while checking auth
+  if (authLoading) {
+    return <div className="min-h-screen bg-dashboard-bg" />;
+  }
+
+  // Show login page if not authenticated
+  if (!user) {
+    return <Login />;
+  }
 
   if (loading) {
     return (
@@ -23,6 +36,8 @@ function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onRefresh={refresh}
+        user={user}
+        onLogout={logout}
       >
         <SkeletonPage />
       </Layout>
@@ -61,6 +76,8 @@ function App() {
       cached={data.cached}
       refreshing={refreshing}
       onRefresh={refresh}
+      user={user}
+      onLogout={logout}
     >
       <Suspense fallback={<SkeletonPage />}>
         {activeTab === 'overview' && storeData && <Overview data={storeData} />}
