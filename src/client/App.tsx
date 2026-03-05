@@ -1,25 +1,30 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Layout } from './components/Layout';
-import { Overview } from './pages/Overview';
-import { Traffic } from './pages/Traffic';
-import { Engagement } from './pages/Engagement';
-import { Conversions } from './pages/Conversions';
-import { Audience } from './pages/Audience';
-import { Technical } from './pages/Technical';
+import { SkeletonPage } from './components/Skeleton';
 import { useDashboardData } from './hooks/useDashboardData';
 
+const Overview = lazy(() => import('./pages/Overview').then((m) => ({ default: m.Overview })));
+const Traffic = lazy(() => import('./pages/Traffic').then((m) => ({ default: m.Traffic })));
+const Engagement = lazy(() => import('./pages/Engagement').then((m) => ({ default: m.Engagement })));
+const Conversions = lazy(() => import('./pages/Conversions').then((m) => ({ default: m.Conversions })));
+const Audience = lazy(() => import('./pages/Audience').then((m) => ({ default: m.Audience })));
+const Technical = lazy(() => import('./pages/Technical').then((m) => ({ default: m.Technical })));
+
 function App() {
-  const { data, loading, error, refresh, selectedStore, setSelectedStore } = useDashboardData();
+  const { data, loading, refreshing, error, refresh, selectedStore, setSelectedStore } = useDashboardData();
   const [activeTab, setActiveTab] = useState('overview');
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dashboard-bg flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-dashboard-text-muted border-t-dashboard-text-primary rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-dashboard-text-muted">Loading dashboard data...</p>
-        </div>
-      </div>
+      <Layout
+        selectedStore={selectedStore}
+        onStoreChange={setSelectedStore}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onRefresh={refresh}
+      >
+        <SkeletonPage />
+      </Layout>
     );
   }
 
@@ -51,15 +56,19 @@ function App() {
       activeTab={activeTab}
       onTabChange={setActiveTab}
       lastUpdated={data.lastUpdated}
+      dateRange={storeData?.dateRange}
       cached={data.cached}
+      refreshing={refreshing}
       onRefresh={refresh}
     >
-      {activeTab === 'overview' && storeData && <Overview data={storeData} />}
-      {activeTab === 'traffic' && storeData && <Traffic data={storeData} />}
-      {activeTab === 'engagement' && storeData && <Engagement data={storeData} />}
-      {activeTab === 'conversions' && storeData && <Conversions data={storeData} />}
-      {activeTab === 'audience' && storeData && <Audience data={storeData} />}
-      {activeTab === 'events' && storeData && <Technical data={storeData} />}
+      <Suspense fallback={<SkeletonPage />}>
+        {activeTab === 'overview' && storeData && <Overview data={storeData} />}
+        {activeTab === 'traffic' && storeData && <Traffic data={storeData} />}
+        {activeTab === 'engagement' && storeData && <Engagement data={storeData} />}
+        {activeTab === 'conversions' && storeData && <Conversions data={storeData} />}
+        {activeTab === 'audience' && storeData && <Audience data={storeData} />}
+        {activeTab === 'events' && storeData && <Technical data={storeData} />}
+      </Suspense>
     </Layout>
   );
 }

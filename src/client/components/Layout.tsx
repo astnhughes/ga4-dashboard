@@ -8,7 +8,9 @@ interface LayoutProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   lastUpdated?: string;
+  dateRange?: { start: string; end: string };
   cached?: boolean;
+  refreshing?: boolean;
   onRefresh: () => void;
 }
 
@@ -21,6 +23,24 @@ const TABS: { id: string; label: string; disabled?: boolean }[] = [
   { id: 'events', label: 'Technical' },
 ];
 
+function formatDateRange(dateRange: { start: string; end: string }): string {
+  const fmt = (d: string) => {
+    const date = new Date(d + 'T00:00:00');
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  return `${fmt(dateRange.start)} – ${fmt(dateRange.end)}`;
+}
+
+function timeAgo(isoString: string): string {
+  const diff = Date.now() - new Date(isoString).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
 export function Layout({
   children,
   selectedStore,
@@ -28,7 +48,9 @@ export function Layout({
   activeTab,
   onTabChange,
   lastUpdated,
+  dateRange,
   cached,
+  refreshing,
   onRefresh,
 }: LayoutProps) {
   const store = STORES[selectedStore];
@@ -38,9 +60,9 @@ export function Layout({
     <div className="min-h-screen bg-dashboard-bg">
       {/* Header */}
       <header className="border-b border-dashboard-border bg-dashboard-card">
-        <div className="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <h1 className="text-xl font-bold text-dashboard-text-primary">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
+            <h1 className="text-lg sm:text-xl font-bold text-dashboard-text-primary whitespace-nowrap">
               GA4 Dashboard
             </h1>
 
@@ -67,30 +89,44 @@ export function Layout({
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            {lastUpdated && (
-              <span className="text-xs text-dashboard-text-muted">
-                {cached ? 'Cached' : 'Updated'} {new Date(lastUpdated).toLocaleTimeString()}
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap text-right">
+            {/* Date Range */}
+            {dateRange && (
+              <span className="text-xs text-dashboard-text-muted hidden md:inline">
+                {formatDateRange(dateRange)}
               </span>
             )}
+
+            {/* Last Updated */}
+            {lastUpdated && (
+              <span className="text-xs text-dashboard-text-muted">
+                {cached ? 'Cached' : 'Updated'} {timeAgo(lastUpdated)}
+              </span>
+            )}
+
+            {/* Refresh Button */}
             <button
               onClick={onRefresh}
-              className="px-3 py-1.5 rounded-lg text-sm bg-dashboard-bg text-dashboard-text-muted hover:text-dashboard-text-primary border border-dashboard-border transition-colors"
+              disabled={refreshing}
+              className="px-3 py-1.5 rounded-lg text-sm bg-dashboard-bg text-dashboard-text-muted hover:text-dashboard-text-primary border border-dashboard-border transition-colors disabled:opacity-50 flex items-center gap-1.5"
             >
-              Refresh
+              {refreshing && (
+                <div className="w-3 h-3 border border-dashboard-text-muted border-t-dashboard-text-primary rounded-full animate-spin" />
+              )}
+              {refreshing ? 'Refreshing...' : 'Refresh'}
             </button>
           </div>
         </div>
 
         {/* Tab Navigation */}
-        <div className="max-w-[1600px] mx-auto px-6">
-          <nav className="flex gap-1">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6">
+          <nav className="flex gap-1 overflow-x-auto scrollbar-hide">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => !tab.disabled && onTabChange(tab.id)}
                 disabled={tab.disabled}
-                className={`px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors ${
+                className={`px-3 sm:px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'text-dashboard-text-primary border-b-2'
                     : tab.disabled
@@ -104,7 +140,6 @@ export function Layout({
                 }
               >
                 {tab.label}
-                {tab.disabled && <span className="ml-1 text-xs">(S4)</span>}
               </button>
             ))}
           </nav>
@@ -112,7 +147,7 @@ export function Layout({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-6 py-6">
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
         {children}
       </main>
     </div>

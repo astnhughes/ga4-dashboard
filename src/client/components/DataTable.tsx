@@ -47,8 +47,8 @@ export function DataTable<T>({
   });
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="overflow-x-auto scrollbar-hide">
+      <table className="w-full text-sm min-w-[600px]">
         <thead>
           <tr className="text-dashboard-text-muted border-b border-dashboard-border">
             {columns.map((col) => (
