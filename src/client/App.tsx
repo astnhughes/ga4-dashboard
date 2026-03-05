@@ -3,6 +3,9 @@ import { Layout } from './components/Layout';
 import { Overview } from './pages/Overview';
 import { Traffic } from './pages/Traffic';
 import { Engagement } from './pages/Engagement';
+import { Conversions } from './pages/Conversions';
+import { Audience } from './pages/Audience';
+import { Technical } from './pages/Technical';
 import { useDashboardData } from './hooks/useDashboardData';
 
 function App() {
@@ -54,6 +57,9 @@ function App() {
       {activeTab === 'overview' && storeData && <Overview data={storeData} />}
       {activeTab === 'traffic' && storeData && <Traffic data={storeData} />}
       {activeTab === 'engagement' && storeData && <Engagement data={storeData} />}
+      {activeTab === 'conversions' && storeData && <Conversions data={storeData} />}
+      {activeTab === 'audience' && storeData && <Audience data={storeData} />}
+      {activeTab === 'events' && storeData && <Technical data={storeData} />}
     </Layout>
   );
 }

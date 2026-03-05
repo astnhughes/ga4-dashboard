@@ -12,13 +12,13 @@ interface LayoutProps {
   onRefresh: () => void;
 }
 
-const TABS = [
+const TABS: { id: string; label: string; disabled?: boolean }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'traffic', label: 'Traffic' },
   { id: 'engagement', label: 'Engagement' },
-  { id: 'conversions', label: 'Conversions', disabled: true },
-  { id: 'audience', label: 'Audience', disabled: true },
-  { id: 'events', label: 'Events', disabled: true },
+  { id: 'conversions', label: 'Conversions' },
+  { id: 'audience', label: 'Audience' },
+  { id: 'events', label: 'Technical' },
 ];
 
 export function Layout({
