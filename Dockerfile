@@ -25,15 +25,12 @@ RUN npm ci --legacy-peer-deps --omit=dev
 # Copy built frontend
 COPY --from=builder /app/dist/client ./dist/client
 
-# Copy built server
+# Copy built server + shared
 COPY --from=builder /app/dist/server ./dist/server
-
-# Copy shared types (needed at runtime for constants)
-COPY --from=builder /app/src/shared ./src/shared
 
 ENV NODE_ENV=production
 ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["node", "dist/server/index.js"]
+CMD ["node", "dist/server/server/index.js"]

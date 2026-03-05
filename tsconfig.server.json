@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "outDir": "dist/server",
-    "rootDir": "src/server",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["src/shared/*"]
