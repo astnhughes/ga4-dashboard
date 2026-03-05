@@ -35,7 +35,7 @@ export function Conversions({ data }: ConversionsProps) {
   // Calculate KPIs
   const leadEvents = data.events.filter((e) => e.classification === 'lead');
   const totalLeads = leadEvents.reduce((sum, e) => sum + e.eventCount, 0);
-  const totalLeadUsers = leadEvents.reduce((sum, e) => sum + e.uniqueUsers, 0);
+  const _totalLeadUsers = leadEvents.reduce((sum, e) => sum + e.uniqueUsers, 0);
 
   const vdpEvents = data.events.filter(
     (e) => e.eventName.toLowerCase().includes('vdp') || e.eventName.toLowerCase().includes('vehicle_detail')

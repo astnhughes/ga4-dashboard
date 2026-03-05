@@ -136,6 +136,7 @@ async function fetchYoYData(propertyId: string) {
 
 // --- Data transformation helpers ---
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseTrafficData(response: any): {
   channels: ChannelData[];
   dailySessions: DailyDataPoint[];
@@ -201,6 +202,7 @@ function parseTrafficData(response: any): {
   return { channels, dailySessions, totalSessions, totalUsers, totalNewUsers, totalConversions };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseEngagementData(response: any): {
   devices: DeviceData[];
   topPages: PageData[];
@@ -258,6 +260,7 @@ function parseEngagementData(response: any): {
   return { devices, topPages };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseConversionData(response: any): {
   events: EventData[];
   dailyConversions: DailyDataPoint[];
@@ -313,6 +316,7 @@ function parseConversionData(response: any): {
   return { events, dailyConversions };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseAudienceData(response: any): CityData[] {
   const cityMap: Record<string, CityData> = {};
 
@@ -345,6 +349,7 @@ function parseAudienceData(response: any): CityData[] {
   return Object.values(cityMap).sort((a, b) => b.sessions - a.sessions);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseYoYData(response: any): {
   currentTotals: { sessions: number; users: number; conversions: number };
   previousTotals: { sessions: number; users: number; conversions: number };
@@ -418,12 +423,12 @@ export async function fetchStoreData(storeId: StoreId): Promise<StoreDashboardDa
   ]);
 
   // Parse responses
-  const { channels, dailySessions, totalSessions, totalUsers, totalNewUsers, totalConversions } =
+  const { channels, dailySessions, totalSessions, totalUsers, totalConversions } =
     parseTrafficData(trafficRaw);
   const { devices, topPages } = parseEngagementData(engagementRaw);
   const { events, dailyConversions } = parseConversionData(conversionRaw);
   const cities = parseAudienceData(audienceRaw);
-  const { currentTotals, previousTotals } = parseYoYData(yoyRaw);
+  const { previousTotals } = parseYoYData(yoyRaw);
 
   // Build KPIs with YoY
   const conversionRate = totalSessions > 0 ? totalConversions / totalSessions : 0;
