@@ -9,6 +9,7 @@ const Engagement = lazy(() => import('./pages/Engagement').then((m) => ({ defaul
 const Conversions = lazy(() => import('./pages/Conversions').then((m) => ({ default: m.Conversions })));
 const Audience = lazy(() => import('./pages/Audience').then((m) => ({ default: m.Audience })));
 const Technical = lazy(() => import('./pages/Technical').then((m) => ({ default: m.Technical })));
+const Guide = lazy(() => import('./pages/Guide').then((m) => ({ default: m.Guide })));
 
 function App() {
   const { data, loading, refreshing, error, refresh, selectedStore, setSelectedStore } = useDashboardData();
@@ -68,6 +69,7 @@ function App() {
         {activeTab === 'conversions' && storeData && <Conversions data={storeData} />}
         {activeTab === 'audience' && storeData && <Audience data={storeData} />}
         {activeTab === 'events' && storeData && <Technical data={storeData} />}
+        {activeTab === 'guide' && <Guide />}
       </Suspense>
     </Layout>
   );

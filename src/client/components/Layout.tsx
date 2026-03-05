@@ -21,6 +21,7 @@ const TABS: { id: string; label: string; disabled?: boolean }[] = [
   { id: 'conversions', label: 'Conversions' },
   { id: 'audience', label: 'Audience' },
   { id: 'events', label: 'Technical' },
+  { id: 'guide', label: 'Guide' },
 ];
 
 function formatDateRange(dateRange: { start: string; end: string }): string {

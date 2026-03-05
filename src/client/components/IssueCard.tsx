@@ -18,13 +18,18 @@ export function IssueCard({ issue }: IssueCardProps) {
 
   return (
     <div
-      className={`rounded-xl border ${style.border} ${style.bg} p-4 cursor-pointer transition-all hover:brightness-110`}
+      role="button"
+      tabIndex={0}
+      aria-expanded={expanded}
+      aria-label={`${style.label} issue: ${issue.title}. Press to ${expanded ? 'collapse' : 'expand'} details.`}
+      className={`rounded-xl border ${style.border} ${style.bg} p-4 cursor-pointer transition-all hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-infiniti/50`}
       onClick={() => setExpanded(!expanded)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(!expanded); } }}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className={`text-xs font-bold ${style.text} uppercase tracking-wide`}>
+            <span className={`text-xs font-bold ${style.text} uppercase tracking-wide`} aria-label={`Severity: ${style.label}`}>
               {style.label}
             </span>
             <span className="text-xs text-dashboard-text-muted capitalize">
@@ -35,9 +40,9 @@ export function IssueCard({ issue }: IssueCardProps) {
             {issue.title}
           </h3>
         </div>
-        <button className={`text-dashboard-text-muted text-xs mt-1 flex-shrink-0`}>
+        <span className="text-dashboard-text-muted text-xs mt-1 flex-shrink-0" aria-hidden="true">
           {expanded ? 'Hide' : 'Details'}
-        </button>
+        </span>
       </div>
 
       {expanded && (

@@ -13,7 +13,8 @@ export function EducationalPanel({ title, children, defaultOpen = false }: Educa
     <div className="bg-dashboard-card/50 rounded-lg border border-dashboard-border/50">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-dashboard-card-hover/30 transition-colors rounded-lg"
+        aria-expanded={open}
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-dashboard-card-hover/30 transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-infiniti/50"
       >
         <span className="text-sm font-medium text-infiniti">{title}</span>
         <svg
@@ -21,12 +22,13 @@ export function EducationalPanel({ title, children, defaultOpen = false }: Educa
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
       {open && (
-        <div className="px-4 pb-4 text-sm text-dashboard-text-primary leading-relaxed space-y-2">
+        <div className="px-4 pb-4 text-sm text-dashboard-text-primary leading-relaxed space-y-2" role="region" aria-label={title}>
           {children}
         </div>
       )}
