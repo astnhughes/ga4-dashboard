@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:8080"
+    environment:
+      - NODE_ENV=production
+      - GA4_PROPERTY_ID_TOYOTA=358670218
+      - GA4_PROPERTY_ID_INFINITI=308058481
+    env_file:
+      - .env
