@@ -110,7 +110,7 @@ router.get('/auth/callback', async (req: Request, res: Response) => {
       return;
     }
 
-    const tokens = await tokenRes.json();
+    const tokens = (await tokenRes.json()) as { access_token: string };
 
     // Get user info from Google
     const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
@@ -122,7 +122,7 @@ router.get('/auth/callback', async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await userRes.json();
+    const user = (await userRes.json()) as { email: string; name?: string; picture?: string };
 
     // Check allowed emails (if restriction is enabled)
     if (ALLOWED_EMAILS && !ALLOWED_EMAILS.includes(user.email.toLowerCase())) {
