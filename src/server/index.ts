@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import dashboardRoutes from './routes/dashboard';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,13 +19,8 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Dashboard data endpoint (placeholder for Sprint 2)
-app.get('/api/dashboard-data', (_req, res) => {
-  res.json({
-    message: 'GA4 Dashboard API — data endpoint coming in Sprint 2',
-    status: 'placeholder',
-  });
-});
+// Dashboard API routes
+app.use('/api', dashboardRoutes);
 
 // Serve React app for all other routes in production
 if (process.env.NODE_ENV === 'production') {
