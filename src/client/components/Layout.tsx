@@ -14,8 +14,8 @@ interface LayoutProps {
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
-  { id: 'traffic', label: 'Traffic', disabled: true },
-  { id: 'engagement', label: 'Engagement', disabled: true },
+  { id: 'traffic', label: 'Traffic' },
+  { id: 'engagement', label: 'Engagement' },
   { id: 'conversions', label: 'Conversions', disabled: true },
   { id: 'audience', label: 'Audience', disabled: true },
   { id: 'events', label: 'Events', disabled: true },
@@ -104,7 +104,7 @@ export function Layout({
                 }
               >
                 {tab.label}
-                {tab.disabled && <span className="ml-1 text-xs">(S3)</span>}
+                {tab.disabled && <span className="ml-1 text-xs">(S4)</span>}
               </button>
             ))}
           </nav>

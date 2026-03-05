@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Layout } from './components/Layout';
 import { Overview } from './pages/Overview';
+import { Traffic } from './pages/Traffic';
+import { Engagement } from './pages/Engagement';
 import { useDashboardData } from './hooks/useDashboardData';
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
       onRefresh={refresh}
     >
       {activeTab === 'overview' && storeData && <Overview data={storeData} />}
+      {activeTab === 'traffic' && storeData && <Traffic data={storeData} />}
+      {activeTab === 'engagement' && storeData && <Engagement data={storeData} />}
     </Layout>
   );
 }
