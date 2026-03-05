@@ -75,6 +75,7 @@ jobs:
             --timeout 60s \
             --concurrency 80 \
             --allow-unauthenticated \
+            --service-account ga4-dashboard@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
             --set-env-vars "GOOGLE_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }},GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }},SESSION_SECRET=${{ secrets.SESSION_SECRET }}"
 
       - name: Smoke test
