@@ -36,6 +36,9 @@ docker-compose.override.yml
 # Coverage
 coverage/
 
+# Claude Code
+.claude/
+
 # Misc
 *.tgz
 .cache
